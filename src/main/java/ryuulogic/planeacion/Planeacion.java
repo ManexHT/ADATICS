@@ -18,5 +18,5 @@ public class Planeacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPlaneacion;
     @Column(nullable = false, length = 10)
-    private
+    private dsd
 }
