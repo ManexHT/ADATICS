@@ -62,6 +62,6 @@ public class Planeacion {
     /*@OneToMany(mappedBy = "planeacion")
     private List<Reporte> reportes;*/ //Comente esta sección debido a que requerimos los reportes
 
-    /*@OneToMany(mappedBy = "planeacion")
-    private List<Objetivo> objetive;*/
+    @OneToMany(mappedBy = "planeacion")
+    private List<Objetivo> objetive;
 }
