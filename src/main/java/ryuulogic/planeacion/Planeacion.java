@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import ryuulogic.objetivo.Objetivo;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Planeacion {
     private byte numActividad;
 
     @Column(nullable = false) //Alfanumerico
-    private String objetivo;
+    private String objetivo; //Este atributo debería hacer referencia e la clase objetivo en las relaciones
 
     @Column(nullable = false, length = 7) //Numerico (1-7)
     private int componente;
@@ -60,4 +61,7 @@ public class Planeacion {
     //RELACIONES
     /*@OneToMany(mappedBy = "planeacion")
     private List<Reporte> reportes;*/ //Comente esta sección debido a que requerimos los reportes
+
+    /*@OneToMany(mappedBy = "planeacion")
+    private List<Objetivo> objetive;*/
 }
