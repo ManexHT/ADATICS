@@ -35,10 +35,17 @@ public class ObjetivoController {
     }
 
     //Falta terminarlos con respecto a las relaciones que tienen
-    /*@PostMapping
+    @PostMapping
     public ResponseEntity<Objetivo> save(@RequestBody Objetivo objetivo, UriComponentsBuilder uriBuilder) {
-        Optional<Planeacion> planeacionOptional = planeacionRepository.findById(objetivo.getIdObjetivo())
-    }*/
+        Optional<Planeacion> planeacionOptional = planeacionRepository.findById(objetivo.getPlaneacion().getIdPlaneacion());
+        if(!planeacionOptional.isPresent()){
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        objetivo.setPlaneacion(planeacionOptional.get());
+        Objetivo created = objetivoRepository.save(objetivo);
+        URI uri = uriBuilder.path("/objetivo/{id}").buildAndExpand(created.getIdObjetivo()).toUri();
+        return ResponseEntity.created(uri).body(created);
+    }
 
     @PutMapping("/{idObjetivo}")
     public ResponseEntity<Void> update(@PathVariable Long idObjetivo, @RequestBody Objetivo objetivo) {
