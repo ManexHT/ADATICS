@@ -1,10 +1,13 @@
 package ryuulogic.objetivo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import ryuulogic.planeacion.Planeacion;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,4 +25,9 @@ public class Objetivo {
 
     @Column(nullable = false, length = 100) //Texto 100 caracteres
     private byte descripcion;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idPlaneacion")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Planeacion planeacion;
 }

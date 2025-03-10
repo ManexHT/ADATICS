@@ -37,13 +37,24 @@ public class ObjetivoController {
     //Falta terminarlos con respecto a las relaciones que tienen
     /*@PostMapping
     public ResponseEntity<Objetivo> save(@RequestBody Objetivo objetivo, UriComponentsBuilder uriBuilder) {
-        Optional<Planeacion> planeacionOptional = planeacionRepository.findById(objetivo.get)
+        Optional<Planeacion> planeacionOptional = planeacionRepository.findById(objetivo.getIdObjetivo())
     }*/
 
-    /*@PutMapping("/{idObjetivo}")
+    @PutMapping("/{idObjetivo}")
     public ResponseEntity<Void> update(@PathVariable Long idObjetivo, @RequestBody Objetivo objetivo) {
-
-    }*/
+        Optional<Planeacion> planeacionOptional = planeacionRepository.findById(objetivo.getPlaneacion().getIdPlaneacion());
+        if(!planeacionOptional.isPresent()){
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        Objetivo objetivoAnterior = objetivoRepository.findById(objetivo.getIdObjetivo()).get();
+        if(objetivoAnterior != null){
+            objetivo.setPlaneacion(planeacionOptional.get());
+            objetivo.setIdObjetivo(objetivoAnterior.getIdObjetivo());
+            objetivoRepository.save(objetivo);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
     @DeleteMapping("/{idObjetivo}")
     public ResponseEntity<Void> delete(@PathVariable Long idObjetivo) {
