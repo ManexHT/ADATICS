@@ -1,4 +1,4 @@
-package ryuulogic.reportes;
+package ryuulogic.adatics.reportes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;

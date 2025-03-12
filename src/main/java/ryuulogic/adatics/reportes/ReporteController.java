@@ -1,12 +1,11 @@
-package ryuulogic.reportes;
+package ryuulogic.adatics.reportes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Optional;
-import java.net.URI;
+
 @RestController
 @RequestMapping("reporte")
 

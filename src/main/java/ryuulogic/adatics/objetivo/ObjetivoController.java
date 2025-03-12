@@ -1,13 +1,12 @@
-package ryuulogic.objetivo;
+package ryuulogic.adatics.objetivo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import ryuulogic.planeacion.Planeacion;
-import ryuulogic.planeacion.PlaneacionRepository;
+import ryuulogic.adatics.planeacion.Planeacion;
+import ryuulogic.adatics.planeacion.PlaneacionRepository;
 
-import javax.swing.text.html.Option;
 import java.net.URI;
 import java.util.Optional;
 

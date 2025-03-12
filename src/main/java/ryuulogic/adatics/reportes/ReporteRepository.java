@@ -1,7 +1,6 @@
-package ryuulogic.reportes;
+package ryuulogic.adatics.reportes;
 
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 
 public interface ReporteRepository extends CrudRepository<Reporte, Integer> {
 }

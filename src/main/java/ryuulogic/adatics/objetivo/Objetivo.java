@@ -1,4 +1,4 @@
-package ryuulogic.objetivo;
+package ryuulogic.adatics.objetivo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import ryuulogic.planeacion.Planeacion;
+import ryuulogic.adatics.planeacion.Planeacion;
 
 
 @AllArgsConstructor
