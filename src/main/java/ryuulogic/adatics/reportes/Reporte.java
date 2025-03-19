@@ -2,7 +2,12 @@ package ryuulogic.adatics.reportes;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.*;
+import ryuulogic.adatics.actividad.Actividad;
 import ryuulogic.adatics.planeacion.Planeacion;
 
 import java.sql.Date;
@@ -14,10 +19,9 @@ import java.sql.Date;
 @Entity
 @Table(name="reporte")
 public class Reporte {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("idReporte")
+   // @JsonProperty("idReporte")
     private Long idReporte;
 
     private Date fecha;
@@ -35,8 +39,8 @@ public class Reporte {
     @Column(nullable = false, length = 50)
     private String nombre;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "idPlaneacion")
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idActividad")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Planeacion planeacion;
+    private Actividad actividad;
 }
