@@ -13,61 +13,74 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/objetivo")
 public class ObjetivoController {
+
     @Autowired
     private ObjetivoRepository objetivoRepository;
+
     @Autowired
     private PlaneacionRepository planeacionRepository;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<Iterable<Objetivo>> findAll() {
         return ResponseEntity.ok(objetivoRepository.findAll());
     }
 
     @GetMapping("/{idObjetivo}")
     public ResponseEntity<Objetivo> findById(@PathVariable Long idObjetivo) {
-        Optional<Objetivo> objetivoOptional = objetivoRepository.findById(idObjetivo);
-        if (objetivoOptional.isPresent()) {
-            return ResponseEntity.ok(objetivoOptional.get());
-        }else{
-            return ResponseEntity.notFound().build();
-        }
+        return objetivoRepository.findById(idObjetivo)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    //Falta terminarlos con respecto a las relaciones que tienen
     @PostMapping
-    public ResponseEntity<Objetivo> save(@RequestBody Objetivo objetivo, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<Objetivo> create(@RequestBody Objetivo objetivo, UriComponentsBuilder uriBuilder) {
+        System.out.println("Datos recibidos: " + objetivo.toString());
+
+        if (objetivo.getPlaneacion() == null || objetivo.getPlaneacion().getIdPlaneacion() == null) {
+            System.out.println("Planeacion es null o idPlaneacion es null");
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<Planeacion> planeacionOptional = planeacionRepository.findById(objetivo.getPlaneacion().getIdPlaneacion());
-        if(!planeacionOptional.isPresent()){
+        if (planeacionOptional.isEmpty()) {
+            System.out.println("Planeacion no encontrada con id: " + objetivo.getPlaneacion().getIdPlaneacion());
             return ResponseEntity.unprocessableEntity().build();
         }
+
         objetivo.setPlaneacion(planeacionOptional.get());
-        Objetivo created = objetivoRepository.save(objetivo);
-        URI uri = uriBuilder.path("/objetivo/{id}").buildAndExpand(created.getIdObjetivo()).toUri();
-        return ResponseEntity.created(uri).body(created);
+        Objetivo savedObjetivo = objetivoRepository.save(objetivo);
+
+        URI uri = uriBuilder.path("/objetivo/{idObjetivo}").buildAndExpand(savedObjetivo.getIdObjetivo()).toUri();
+        return ResponseEntity.created(uri).body(savedObjetivo);
     }
 
     @PutMapping("/{idObjetivo}")
-    public ResponseEntity<Void> update(@PathVariable Long idObjetivo, @RequestBody Objetivo objetivo) {
+    public ResponseEntity<Objetivo> update(@PathVariable Long idObjetivo, @RequestBody Objetivo objetivo) {
+        if (objetivo.getPlaneacion() == null || objetivo.getPlaneacion().getIdPlaneacion() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<Planeacion> planeacionOptional = planeacionRepository.findById(objetivo.getPlaneacion().getIdPlaneacion());
-        if(!planeacionOptional.isPresent()){
+        if (planeacionOptional.isEmpty()) {
             return ResponseEntity.unprocessableEntity().build();
         }
-        Objetivo objetivoAnterior = objetivoRepository.findById(objetivo.getIdObjetivo()).get();
-        if(objetivoAnterior != null){
-            objetivo.setPlaneacion(planeacionOptional.get());
-            objetivo.setIdObjetivo(objetivoAnterior.getIdObjetivo());
-            objetivoRepository.save(objetivo);
-            return ResponseEntity.ok().build();
+
+        if (!objetivoRepository.existsById(idObjetivo)) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+
+        objetivo.setPlaneacion(planeacionOptional.get());
+        objetivo.setIdObjetivo(idObjetivo);
+        Objetivo updatedObjetivo = objetivoRepository.save(objetivo);
+        return ResponseEntity.ok(updatedObjetivo);
     }
 
     @DeleteMapping("/{idObjetivo}")
     public ResponseEntity<Void> delete(@PathVariable Long idObjetivo) {
-        if(objetivoRepository.findById(idObjetivo).isPresent()) {
-            objetivoRepository.deleteById(idObjetivo);
-            return ResponseEntity.noContent().build();
+        if (!objetivoRepository.existsById(idObjetivo)) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        objetivoRepository.deleteById(idObjetivo);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -3,61 +3,56 @@ package ryuulogic.adatics.planeacion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/planeacion")
 public class PlaneacionController {
+
     @Autowired
     private PlaneacionRepository planeacionRepository;
 
-    /*Hay que sincronizar con ReporteRepository
-    @Autowired
-    private ReporteRepository reporteRepository
-     */
-
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<Iterable<Planeacion>> findAll() {
         return ResponseEntity.ok(planeacionRepository.findAll());
     }
 
     @GetMapping("/{idPlaneacion}")
     public ResponseEntity<Planeacion> findById(@PathVariable Long idPlaneacion) {
-        Optional<Planeacion> planeacionOptional = planeacionRepository.findById(idPlaneacion);
-        if (planeacionOptional.isPresent()) {
-            return ResponseEntity.ok(planeacionOptional.get());
-        }else{
-            return ResponseEntity.notFound().build();
-        }
+        return planeacionRepository.findById(idPlaneacion)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    /* REQUIERE DE LA EXISTENCIA DE Reportes
     @PostMapping
     public ResponseEntity<Planeacion> create(@RequestBody Planeacion planeacion, UriComponentsBuilder uriBuilder) {
-        Optional<>
+        if (planeacion.getIdPlaneacion() != null && planeacionRepository.existsById(planeacion.getIdPlaneacion())) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        Planeacion savedPlaneacion = planeacionRepository.save(planeacion);
+        return ResponseEntity.created(uriBuilder.path("/planeacion/{idPlaneacion}")
+                        .buildAndExpand(savedPlaneacion.getIdPlaneacion()).toUri())
+                .body(savedPlaneacion);
     }
 
-    @PutMapping
-    */
+    @PutMapping("/{idPlaneacion}")
+    public ResponseEntity<Planeacion> update(@PathVariable Long idPlaneacion, @RequestBody Planeacion planeacion) {
+        if (!planeacionRepository.existsById(idPlaneacion)) {
+            return ResponseEntity.notFound().build();
+        }
+        planeacion.setIdPlaneacion(idPlaneacion);
+        Planeacion updatedPlaneacion = planeacionRepository.save(planeacion);
+        return ResponseEntity.ok(updatedPlaneacion);
+    }
 
     @DeleteMapping("/{idPlaneacion}")
     public ResponseEntity<Void> delete(@PathVariable Long idPlaneacion) {
-        if(planeacionRepository.findById(idPlaneacion).isPresent()) {
-            planeacionRepository.deleteById(idPlaneacion);
-            return ResponseEntity.noContent().build();
+        if (!planeacionRepository.existsById(idPlaneacion)) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        planeacionRepository.deleteById(idPlaneacion);
+        return ResponseEntity.noContent().build();
     }
-
-    /* REQUIERE DE LA EXISTENCIA DE REPORTES
-    @GetMapping("/reportes/{idPlaneacion}")
-    public ResponseEntity<Iterable<Reporte>tResporte>(@PathVariable Long idPlaneacion){
-        Optional<Planeacion> planeacionOptional = planeacionRepository.findById(idPlaneacion);
-        if (planeacionOptional.isPresent()) {
-            return ResponseEntity.ok(planeacionOptional.get().getReportes());
-        }
-        return ResponseEntity.notFound().build();
-    }
-     */
 }

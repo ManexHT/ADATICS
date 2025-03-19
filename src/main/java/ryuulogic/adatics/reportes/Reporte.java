@@ -1,15 +1,11 @@
 package ryuulogic.adatics.reportes;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import ryuulogic.adatics.planeacion.Planeacion;
 
 import java.sql.Date;
-
 
 @Data
 @NoArgsConstructor
@@ -17,22 +13,30 @@ import java.sql.Date;
 @ToString
 @Entity
 @Table(name="reporte")
-
 public class Reporte {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("idReporte")
     private Long idReporte;
+
     private Date fecha;
 
     private String trimestre;
 
-    @Column(nullable = false, length = 10) //Numerico
-    private byte numActividad;
+    @Column(nullable = false)
+    private int numActividad;
 
-    private String evidencia_Fotografica;
+    private String evidenciaFotografica;
 
     @Column(nullable = false, length = 100)
     private String redaccion;
 
+    @Column(nullable = false, length = 50)
     private String nombre;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "idPlaneacion")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Planeacion planeacion;
 }

@@ -1,6 +1,7 @@
 package ryuulogic.adatics.planeacion;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,51 +18,46 @@ import java.util.List;
 @Entity
 @Table(name = "planeacion")
 public class Planeacion {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPlaneacion;
 
-    @Column(nullable = false, length = 10) //Numerico
-    private byte numActividad;
+    @Column(nullable = false, length = 10)
+    private int numActividad; // Cambiado de byte a int
 
-    @Column(nullable = false) //Alfanumerico
-    private String objetivo; //Este atributo debería hacer referencia e la clase objetivo en las relaciones
-
-    @Column(nullable = false, length = 7) //Numerico (1-7)
+    @Column(nullable = false)
     private int componente;
 
-    @Column(nullable = false, length = 50) //Texto 50 caracteres
+    @Column(nullable = false, length = 50)
     private String unidadResponsable;
 
-    @Column(nullable = false, length = 60) //Texto 60 caracteres
+    @Column(nullable = false, length = 60)
     private String jefeUnidad;
 
-    @Column(nullable = false, length = 100) //Texto 100 caracteres
+    @Column(nullable = false, length = 100)
     private String actividades;
 
-    @Column(nullable = false, length = 100) //Texto 100 caracteres
+    @Column(nullable = false, length = 100)
     private String medioVerificacion;
 
-    @Column(nullable = false, length = 100) //Texto 100 caracteres
+    @Column(nullable = false, length = 100)
     private String indicadorResultados;
 
     @Column(nullable = false, length = 100)
     private String calendarizacion;
 
-    //Este esta de mas, hay que eliminarlo del documento de la IEEE
+    @Column(nullable = false)
     private double presupuesto;
 
-    @Column(nullable = false, length = 3) //Numerico 3 digitos
+    @Column(nullable = false, length = 3)
     private double cantidadAnual;
 
-    @Column(nullable = false, length = 3) //Numerico 3 digitos
+    @Column(nullable = false, length = 50)
     private String unidadMedida;
 
 
-    //RELACIONES
-    /*@OneToMany(mappedBy = "planeacion")
-    private List<Reporte> reportes;*/ //Comente esta sección debido a que requerimos los reportes
-
-    @OneToMany(mappedBy = "planeacion")
-    private List<Objetivo> objetive;
+    @OneToMany(mappedBy = "planeacion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Objetivo> objetivos;
 }

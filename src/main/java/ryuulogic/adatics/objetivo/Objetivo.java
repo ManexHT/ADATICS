@@ -20,11 +20,11 @@ public class Objetivo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idObjetivo;
 
-    @Column(nullable = false, length = 50) //Texto 50 caracteres
-    private byte nombreObjetivo;
+    @Column(nullable = false, length = 50)
+    private String nombreObjetivo;
 
-    @Column(nullable = false, length = 100) //Texto 100 caracteres
-    private byte descripcion;
+    @Column(nullable = false, length = 100)
+    private String descripcion;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "idPlaneacion")
