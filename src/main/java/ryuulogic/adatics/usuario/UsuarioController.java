@@ -9,7 +9,7 @@ import ryuulogic.adatics.reportes.ReporteRepository;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/reporte")
+@RequestMapping("/usuario")
 
 public class UsuarioController {
 
